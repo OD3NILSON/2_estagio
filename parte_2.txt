@@ -1,0 +1,107 @@
+create database banco_de_dados
+default character set utf8
+default collate utf8_general_ci;
+
+use banco_de_dados;
+create table usuario(
+id_usuario int not null,
+senha int not null,
+nome varchar(30) not null,
+primary key(id_usuario)
+) default charset = utf8;
+
+use banco_de_dados;
+create table coordena(
+id_empre int not null,
+id_tanq varchar(10) not null,
+id_usuario int not null,
+consulta date not null
+) default charset = utf8;
+
+
+use banco_de_dados;
+create table tanque(
+id_tan varchar(10)  null,
+nível_alto varchar(5) not null,
+nível_medio varchar(5) not null,
+nível_baixo varchar(5) not null,
+primary key(id_tanque)
+) default charset = utf8;
+
+
+use banco_de_dados;
+create table local_da_empresa(
+id_empresa int not null,
+estado varchar(30) not null,
+cidade varchar(30) not null,
+bairro varchar(30) not null,
+rua varchar(30) not null,
+numero int(5) not null,
+primary key(id_empresa)
+) default charset = utf8;
+
+use banco_de_dados;
+create table monitoramento(
+id_tan varchar(8)  not null,
+nível_alto  int(1) not null,
+nível_medio int(1) not null,
+nível_baixo int(1) not null
+) default charset = utf8;
+
+use banco_de_dados;
+INSERT INTO `banco_de_dados`.`usuario` (`id_usuario`, `senha`, `nome`) VALUES ('1234', '5674', 'Vitor Costa');
+INSERT INTO `banco_de_dados`.`usuario` (`id_usuario`, `senha`, `nome`) VALUES ('2134', '9876', 'Lucas Matos');
+INSERT INTO `banco_de_dados`.`usuario` (`id_usuario`, `senha`, `nome`) VALUES ('4321', '0987', 'Maria Francisca');
+INSERT INTO `banco_de_dados`.`usuario` (`id_usuario`, `senha`, `nome`) VALUES ('3214', '0983', 'Eduardo Costa');
+INSERT INTO `banco_de_dados`.`local_da_empresa` (`id_empresa`, `estado`, `cidade`, `bairro`, `rua`, `numero`) VALUES ('1', 'PB', 'Campina Grande', 'Industrial', 'Coronel Americo Porto', '12');
+INSERT INTO `banco_de_dados`.`local_da_empresa` (`id_empresa`, `estado`, `cidade`, `bairro`, `rua`, `numero`) VALUES ('2', 'AM', 'Manaus', 'Industrial', '31 de Março', '321');
+INSERT INTO `banco_de_dados`.`local_da_empresa` (`id_empresa`, `estado`, `cidade`, `bairro`, `rua`, `numero`) VALUES ('3', 'MA', 'Bacabal', 'Guariba', 'Papagaio', '404');
+INSERT INTO `banco_de_dados`.`local_da_empresa` (`id_empresa`, `estado`, `cidade`, `bairro`, `rua`, `numero`) VALUES ('4', 'PA', 'Belém', 'Guama', 'São João', '134');
+INSERT INTO `banco_de_dados`.`monitoramento` (`id_monitora`, `id_empresa`, `id_tanque`, `nível_atual`, `hora`) VALUES ('1', '1', 'Tanque_A', '78%', '22:30:00');
+INSERT INTO `banco_de_dados`.`monitoramento` (`id_monitora`, `id_empresa`, `id_tanque`, `nível_atual`, `hora`) VALUES ('2', '2', 'Tanque_B', '49%', '14:00:30');
+INSERT INTO `banco_de_dados`.`monitoramento` (`id_monitora`, `id_empresa`, `id_tanque`, `nível_atual`, `hora`) VALUES ('3', '3', 'Tanque_A', '30%', '12:00:00');
+INSERT INTO `banco_de_dados`.`tanque` (`id_tanque`, `nível_alto`, `nível_medio`, `nível_baixo`) VALUES ('Tanque_A', '90%', '50%', '10%');
+INSERT INTO `banco_de_dados`.`tanque` (`id_tanque`, `nível_alto`, `nível_medio`, `nível_baixo`) VALUES ('Tanque_B', '95%', '50%', '5%');
+INSERT INTO `banco_de_dados`.`tanque` (`id_tanque`, `nível_alto`, `nível_medio`, `nível_baixo`) VALUES ('Tanque_C', '100%', '50%', '0%');
+INSERT INTO `banco_de_dados`.`coordena` (`id_empresa`, `id_tanque`, `id_usuario`, `data`, `consulta`) VALUES ('1', 'Tanque_A', '123', '2019-07-07', '1');
+INSERT INTO `banco_de_dados`.`coordena` (`id_empresa`, `id_tanque`, `id_usuario`, `data`, `consulta`) VALUES ('2', 'Tanque_B', '456', '2019-07-05', '2');
+INSERT INTO `banco_de_dados`.`coordena` (`id_empresa`, `id_tanque`, `id_usuario`, `data`, `consulta`) VALUES ('3', 'Tanque_A', '789', '2019-06-07', '3');
+
+use banco_de_dados;
+show tables;
+desc usuario;
+select*from usuario;
+desc local_da_empresa;
+select*from local_da_empresa;
+desc monitoramento;
+select*from monitoramento;
+desc tanque;
+select*from tanque;
+desc coordena;
+select*from coordena;
+
+use banco_de_dados;
+select usuario.nome, local_da_empresa.cidade 
+from coordena inner join usuario
+on coordena.id_usuario= usuario.id_usuario
+inner join local_da_empresa
+on coordena.id_empresa= local_da_empresa.id_empresa
+where cidade like 'Campina Grande%'; 
+
+select  local_da_empresa.id_empresa,tanque.id_tanque, monitoramento.nível_atual
+from monitoramento inner join tanque
+on monitoramento.id_tanque = tanque.id_tanque
+inner join local_da_empresa
+on monitoramento.id_empresa = local_da_empresa.id_empresa
+where nível_atual >= '75%';
+
+select  local_da_empresa.id_empresa,tanque.id_tanque, monitoramento.nível_atual
+from monitoramento inner join tanque
+on monitoramento.id_tanque = tanque.id_tanque
+inner join local_da_empresa
+on monitoramento.id_empresa = local_da_empresa.id_empresa
+where nível_atual >= '49%';
+
+select usuario.nome as Responsavel, tanque.id_tanque as Tanque
+from usuario  inner join tanque
+where nome = 'Thiago Moura';
